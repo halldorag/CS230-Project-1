@@ -10,7 +10,7 @@ def reading_articles(FileName, publishers):
     
     data = pd.read_csv(FileName)
     df = data.set_index("id", drop = False)
-    frames = []
+#    frames = []
     df_filtered = []
     
     for i in range(len(publishers)):
@@ -31,7 +31,8 @@ def creating_labels(data, publishers):
         
 
 
-FileName = 'D:\\CS230_Project\\Data\\all-the-news\\articles1.csv'
+#FileName = 'D:\\CS230_Project\\Data\\all-the-news\\articles1.csv'
+FileName = 'E:\\Dropbox\\A_Stanford_University\\Coursework\\2018.04.02_Spring\\CS_230\\Project\\CS230-Project\\temp\\articles1.csv'
 
 publishers = ['New York Times', 'Breitbart']
 
@@ -42,7 +43,7 @@ data = reading_articles(FileName, publishers)
 Y = data.copy()
 creating_labels(Y, publishers)
 
-#df_clean = data['content'].str.replace('[{}]'.format(string.punctuation), '')
+df_clean = data['content'].str.replace('[{}]'.format(string.punctuation), '')
 
 
 df_clean = df_clean.str.lower()
