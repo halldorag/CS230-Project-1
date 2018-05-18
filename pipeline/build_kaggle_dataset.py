@@ -1,5 +1,7 @@
 """Read, split and save the kaggle dataset for our model"""
 
+# import pdb
+# pdb.set_trace()
 import csv
 import os
 import sys
@@ -65,6 +67,8 @@ if __name__ == "__main__":
     # Load the dataset into memory
     print("Loading Kaggle dataset into memory...")
     dataset = load_dataset(path_dataset)
+    print(dataset.type)
+    aaa
     print("- done.")
 
     # Split the dataset into train, dev and split (dummy split with no shuffle)
