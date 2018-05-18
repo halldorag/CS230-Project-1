@@ -1,4 +1,5 @@
 """Train the model"""
+import pdb
 
 import argparse
 import logging
@@ -40,9 +41,9 @@ if __name__ == '__main__':
 
     # Check that we are not overwriting some previous experiment
     # Comment these lines if you are developing your model and don't care about overwritting
-    model_dir_has_best_weights = os.path.isdir(os.path.join(args.model_dir, "best_weights"))
-    overwritting = model_dir_has_best_weights and args.restore_dir is None
-    assert not overwritting, "Weights found in model_dir, aborting to avoid overwrite"
+    #model_dir_has_best_weights = os.path.isdir(os.path.join(args.model_dir, "best_weights"))
+    #overwritting = model_dir_has_best_weights and args.restore_dir is None
+    #assert not overwritting, "Weights found in model_dir, aborting to avoid overwrite"
 
     # Set the logger
     set_logger(os.path.join(args.model_dir, 'train.log'))
@@ -56,8 +57,17 @@ if __name__ == '__main__':
     path_eval_labels = os.path.join(args.data_dir, 'dev/labels.txt')
 
     # Load Vocabularies
-    words = tf.contrib.lookup.index_table_from_file(path_words, num_oov_buckets=num_oov_buckets)
+    # pdb.set_trace()
+    words = tf.contrib.lookup.index_table_from_file(path_words, num_oov_buckets = num_oov_buckets)
     tags = tf.contrib.lookup.index_table_from_file(path_tags)
+
+    # # #-----
+    # sess = tf.Session()
+    # aa = sess.run(words)
+    # print(aa)
+
+    # aaa
+
 
     # Create the input data pipeline
     logging.info("Creating the datasets...")
@@ -65,6 +75,16 @@ if __name__ == '__main__':
     train_labels = load_dataset_from_text(path_train_labels, tags)
     eval_sentences = load_dataset_from_text(path_eval_sentences, words)
     eval_labels = load_dataset_from_text(path_eval_labels, tags)
+
+    #-----
+    # sess = tf.Session()
+    # batched = train_sentences.batch(4)
+    # iterator = batched.make_initializable_iterator()
+    # sess.run(words.initializer)
+    # sess.run(iterator.initializer)
+
+    # print(sess.run(iterator.get_next()))
+    # aaa
 
     # Specify other parameters for the dataset and the model
     params.eval_size = params.dev_size
@@ -76,6 +96,12 @@ if __name__ == '__main__':
     train_inputs = input_fn('train', train_sentences, train_labels, params)
     eval_inputs = input_fn('eval', eval_sentences, eval_labels, params)
     logging.info("- done.")
+
+    # # ---
+    # sess = tf.Session()
+    # train_inputs2 = sess.run(train_inputs)
+    # print(train_inputs2)
+    # aaaa
 
     # Define the models (2 different set of nodes that share weights for train and eval)
     logging.info("Creating the model...")

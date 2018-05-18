@@ -46,7 +46,7 @@ def input_fn(mode, sentences, labels, params):
     # Create batches and pad the sentences of different length
     padded_shapes = ((tf.TensorShape([None]),  # sentence of unknown size
                       tf.TensorShape([])),     # size(words)
-                     (tf.TensorShape([None]),  # labels of unknown size
+                     (tf.TensorShape([1]),  # labels of unknown size
                       tf.TensorShape([])))     # size(tags)
 
     padding_values = ((params.id_pad_word,   # sentence padded on the right with id_pad_word
@@ -67,7 +67,7 @@ def input_fn(mode, sentences, labels, params):
     # Query the output of the iterator for input to the model
     ((sentence, sentence_lengths), (labels, _)) = iterator.get_next()
     init_op = iterator.initializer
-
+    print(labels)
     # Build and return a dictionnary containing the nodes / ops
     inputs = {
         'sentence': sentence,

@@ -25,10 +25,9 @@ def build_model(mode, inputs, params):
 
         # Apply LSTM over the embeddings
         lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(params.lstm_num_units)
-        output, _  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
-
+        output, final_state  = tf.nn.dynamic_rnn(lstm_cell, sentence, dtype=tf.float32)
         # Compute logits from the output of the LSTM
-        logits = tf.layers.dense(output, params.number_of_tags)
+        logits = tf.contrib.layers.fully_connected(final_state.h, params.number_of_tags)
 
     else:
         raise NotImplementedError("Unknown model version: {}".format(params.model_version))
@@ -59,11 +58,12 @@ def model_fn(mode, inputs, params, reuse=False):
         # Compute the output distribution of the model and the predictions
         logits = build_model(mode, inputs, params)
         predictions = tf.argmax(logits, -1)
-
+    print(logits.shape)
+    # labels = tf.one_hot([0,1],tf.cast(labels,tf.int32),dtype = tf.int64)
     # Define loss and accuracy (we need to apply a mask to account for padding)
-    losses = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels)
-    mask = tf.sequence_mask(sentence_lengths)
-    losses = tf.boolean_mask(losses, mask)
+    losses = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
+    #mask = tf.sequence_mask(sentence_lengths)
+    #losses = tf.boolean_mask(losses, mask)
     loss = tf.reduce_mean(losses)
     accuracy = tf.reduce_mean(tf.cast(tf.equal(labels, predictions), tf.float32))
 
