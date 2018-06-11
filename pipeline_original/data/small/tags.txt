@@ -1,4 +1,0 @@
-B-PER
-O
-B-LOC
-I-LOC
